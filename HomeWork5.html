@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HomeWork_5</title>
+    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .tab-container {
+            max-width: 500px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        .tab-container button:hover{
+            background-color: #dedede;
+        }
+
+        .tab {
+            display: none;
+        }
+
+        .tab-button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .tabel-container {
+            max-width: fit-content;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            padding-top: 15px;
+        }
+
+        h3 {
+            text-align: center;
+            padding-top: 20px;
+            padding-bottom: 10px;
+        }
+
+        form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        input[type="text"], input[type="number"] {
+            width: 95%;
+            padding: 10px;
+            margin-top: 5px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
+        
+        .form__input {
+            font-size: 1.5rem;
+            display: block;
+            width: 100%;
+            padding: 1.3rem 1.5rem;
+            border: 1px solid #d6d6d6;
+            border-radius: 3px;
+        }
+
+        .form__input.invalid {
+            border-color: #ff3838;
+        }
+
+        .form__input.valid {
+            border-color: #3de23d;
+        }
+
+        .invalid {
+            color: #ff3838;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .table th, .table td {
+            padding: 8px 12px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+
+        .table th {
+            background-color: #1ffccc;
+            color: #585858;
+            font-weight: bold;
+        }
+
+        .tab h3 {
+            margin-bottom: 10px;  
+        }
+
+        p {
+            text-align: center;
+        }
+
+        #rata-uang-sangu, #rata-umur {
+            font-weight: bold;
+            color: #35b12a;
+        }
+        
+    </style>
+</head>
+<body>
+    <h1>HomeWork Week 5</h1>
+    <!-- Tabs Button -->
+    <div class="tab-container">
+        <button class="tab-button" onclick="openTab('registrasi')">Registrasi</button>
+        <button class="tab-button" onclick="openTab('list-pendaftar')" >List Pendaftar</button>
+    </div>
+    <!-- Tab Registrasi -->   
+    <div class="tab" id="registrasi" >
+        <div class="container">            
+            <!-- Form Registrasi -->
+            <form id="form-registrasi" class="form">
+                <h3 >Form Registrasi</h3>
+                <div class="form-group">
+                    <label for="nama">Nama:</label>
+                    <input type="text" class="form_input" id="nama" >
+                    <small class="invalid"></small>
+                </div>
+                <div class="form-group">
+                    <label for="umur">Umur:</label>
+                    <input type="number" class="form_input" id="umur">
+                    <small class="invalid"></small>
+                </div>
+                <div class="form-group">
+                    <label for="uang-sangu">Uang Sangu (Rp):</label>
+                    <input type="number" class="form_input" id="uang-sangu">
+                    <small class="invalid"></small>
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>        
+    </div>
+            
+    <!-- Tab List Pendaftar -->
+    <div class="tab" id="list-pendaftar">
+        <!-- Tabel List Pendaftar -->
+        <h3>List Pendaftar</h3>
+        <p>Rata-rata pendaftar memiliki uang sangu sebesar <span id="rata-uang-sangu"></span> dengan rata-rata umur <span id="rata-umur"></span></p>
+        <div class="tabel-container">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Nama</th>
+                        <th>Umur</th>
+                        <th>Uang Sangu (Rp)</th>
+                    </tr>
+                </thead>
+                <tbody id="table-body">
+                    <!-- Data peserta -->
+                </tbody>
+            </table>
+        </div>  
+    </div>
+        
+   
+    <script>
+        // function pindah tab
+        function openTab(tabName) {
+            var i, tabContent;
+
+            tabContent = document.getElementsByClassName("tab");
+            for (i = 0; i < tabContent.length; i++) {
+                tabContent[i].style.display = "none";
+            }
+
+            document.getElementById(tabName).style.display = "block";
+        }
+
+        // Membuat kelas Pendaftar untuk data pendaftaran peserta
+        class Pendaftar {
+            constructor() {
+                this.data = [];
+            }
+
+            tambahPendaftar(nama, umur, uangSangu) {
+                this.data.push({ nama, umur, uangSangu });
+            }
+        }
+
+        const peserta = new Pendaftar();          
+
+        document.addEventListener("DOMContentLoaded", function () {
+            openTab('registrasi');
+
+            const Umurpendaftar = [];
+            const UangSangupendaftar = [];
+
+            // Mendapatkan elemen-elemen pada form
+            const FormRegistrasi = document.getElementById("form-registrasi");
+            const namaInput = document.getElementById("nama");
+            const umurInput = document.getElementById("umur");
+            const uangSanguInput = document.getElementById("uang-sangu");
+
+            // Mendapatkan elemen-elemen pada tabel
+            const tableBody = document.getElementById("table-body");
+            const rataUangSanguSpan = document.getElementById("rata-uang-sangu");
+            const rataUmurSpan = document.getElementById("rata-umur");
+
+            FormRegistrasi.addEventListener("submit", async function (e) {
+                e.preventDefault();
+
+                // Mendapatkan nilai dari input pada form
+                const nama = namaInput.value;
+                const umur = parseInt(umurInput.value);
+                const uang_sangu = parseInt(uangSanguInput.value);
+
+                // Validasi form
+                let isValid = true;
+
+                // Validasi nama
+                if (nama.trim() === '') {
+                    showErrorFor(namaInput, 'Nama tidak boleh kosong');
+                    isValid = false;
+                } else if (nama.length < 10) {
+                    showErrorFor(namaInput, 'Nama minimal harus 10 karakter');
+                    isValid = false;
+                } else {
+                    setValidFor(namaInput);
+                }
+
+                // Validasi umur
+                if (isNaN(umur) || umur === '') {
+                    showErrorFor(umurInput, 'Umur tidak boleh kosong');
+                    isValid = false;
+                } else if (umur < 25) {
+                    showErrorFor(umurInput, 'Umur minimal di atas 25 tahun');
+                    isValid = false;
+                } else {
+                    setValidFor(umurInput);
+                }
+
+                // Validasi uang sangu
+                if (isNaN(uang_sangu) || uang_sangu === '') {
+                    showErrorFor(uangSanguInput, 'Uang Sangu tidak boleh kosong');
+                    isValid = false;
+                } else if (uang_sangu < 100000 || uang_sangu > 1000000) {
+                    showErrorFor(uangSanguInput, 'Uang Sangu minimal 100000 dan maksimal 1000000');
+                    isValid = false;
+                } else {
+                    setValidFor(uangSanguInput);
+                }
+
+                if (isValid) {
+                    // Tambahkan data pendaftar menggunakan kelas Pendaftar
+                    peserta.tambahPendaftar(nama, umur, uang_sangu);
+
+                    // Tambahkan data ke dalam tabel
+                    const tambahpeserta = tableBody.insertRow();
+                    tambahpeserta.innerHTML = `<td>${nama}</td><td>${umur}</td><td>${uang_sangu}</td>`;
+
+                    // Menambahkan data pendaftar ke array
+                    Umurpendaftar.push(umur);
+                    UangSangupendaftar.push(uang_sangu);
+
+                    function HitungTotal(arr){
+                    let total = 0;
+                    
+                    for (let i = 0; i < arr.length; i++) {
+                        total += arr[i];
+                    }
+                    return total;
+                    }
+
+                    const totalUmur = HitungTotal(Umurpendaftar);
+                    const totalUangSangu = HitungTotal(UangSangupendaftar);
+
+                    // menambahkan rata rata data
+                    const rataUangSangu = totalUangSangu / UangSangupendaftar.length;
+                    const rataUmur = totalUmur / Umurpendaftar.length;
+
+                    // Update rata-rata
+                    rataUangSanguSpan.textContent = rataUangSangu.toFixed(2);
+                    rataUmurSpan.textContent = rataUmur.toFixed(2);
+
+                    // Reset form
+                    namaInput.value = "";
+                    umurInput.value = "";
+                    uangSanguInput.value = "";
+                }
+            });
+
+            // menampilkan pesan error     
+            function showErrorFor(InputValue, pesanError) {
+                if (InputValue.classList.contains('form_input')) {
+                    InputValue.classList.add('invalid');
+                }
+                const notif = InputValue.nextElementSibling;
+                notif.innerText = pesanError;
+            }
+
+            function setValidFor(InputValue) {
+                if (InputValue.classList.contains('form_input')) {
+                    InputValue.classList.remove('invalid');
+                }
+                const notif = InputValue.nextElementSibling;
+                notif.innerText = '';
+            }
+        });
+    </script>
+
+    <!-- Script Bootstrap dan jQuery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
